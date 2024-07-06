@@ -8,7 +8,7 @@ const getAllUsers = async (req, res) => {
 const getAUsers = async (req, res) => {
   //   const result = await userCollection.find().toArray();
   try {
-    const users = await User.findOne({ _id: req.params.id });
+    const users = await User.findOne({ id: req.params.id });
     res.send(users);
   } catch (error) {
     res.send(error.message);
@@ -37,12 +37,11 @@ const createUser = async (req, res) => {
 const updateAUsers = async (req, res) => {
   //   const result = await userCollection.find().toArray();
   try {
-    const users = await User.updateOne({ _id: req.params.id });
-    (users.name = req.body.name),
-      (users.age = req.body.age),
-      await newUser.save();
-
-    res.json(newUser);
+    const user = await User.findOne({ id: req.params.id });
+    user.name = req.body.name;
+    user.age = Number(req.body.age);
+    await user.save();
+    res.status(200).json(user);
   } catch (error) {
     res.send(error.message);
   }
@@ -50,7 +49,7 @@ const updateAUsers = async (req, res) => {
 
 const deleteAUser = async (req, res) => {
   try {
-    await User.deleteOne({ _id: req.params.id });
+    await User.deleteOne({ id: req.params.id });
     res.send({ message: "user is deleted" });
   } catch (error) {
     res.send(error.message);
